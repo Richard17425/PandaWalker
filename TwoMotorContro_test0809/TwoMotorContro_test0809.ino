@@ -25,8 +25,8 @@ AccelStepper myStepperR(motorInterfaceType, stepPinR, dirPinR);
 
 void setup() {
   Serial.begin(9600);
-  myStepperL.setMaxSpeed(1000);
-  myStepperR.setMaxSpeed(1000);
+  myStepperL.setMaxSpeed(2500);
+  myStepperR.setMaxSpeed(2000);
   myStepperL.setAcceleration(50);
   myStepperR.setAcceleration(50);
   //myStepper.setSpeed(200);
@@ -36,13 +36,11 @@ void setup() {
 void loop() {
 
     //Forward();
-    myStepperL.setSpeed(2*speed_straight-400);//this is right side
-    myStepperR.setSpeed(-speed_straight);
+    myStepperL.setSpeed(720);    //max：2300  turn Left:700  straight:720  turn around:720 turn right:1100
+    myStepperR.setSpeed(-380);   //max:-1200  turn Left:-700  straight:-380 turn around:380  turn right:-300
     state = 0;
     STATE = ble_val;
 
-  //myStepperL.setSpeed(200);
-  //myStepperR.setSpeed(200);
   myStepperL.runSpeed();
   myStepperR.runSpeed();
 }

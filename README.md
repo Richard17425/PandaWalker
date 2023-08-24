@@ -6,5 +6,16 @@
 3. The code [TwoMotorContro](/TwoMotorContro_test0809/TwoMotorContro_test0809.ino) is used for **walking test**. When you turn on the power, the walker will walk according to the setting. You can always disconnect the bluetooth module from the CNC board when using this code, so that you can upload the code directly to the Arduino every time.
 4. The code [TwoMotorControlBT](/TwoMotorControlBT0816/TwoMotorControlBT0816.ino) is used for **bluetooth remote control**. This document may help you understand how to use the bluetooth remote: [Walker_Control](/Electronics_for_Walker_Control.pdf).
 
+> setSpeed of the motors 
 
-> More details: [CNC Setup](/CNC%20Shield%20Setup.pdf)
+| Action     |Left setSpeed| Right setSpeed |
+| :---         |  :----:  |  :---:  |
+| Max running  |   2300   |  -1200  |
+| walk Straight|   720    |   -380  |
+| trun Left    |   700    |   -700  |
+| trun Right   |   1100   |   -300  |
+| trun Around  |   720    |    380  |
+
+> Documents that can be referenced: 
+> 1. [StepperMotorShield](/StepperMotorShield.pdf) 
+> 2. [CNC Setup](/CNC%20Shield%20Setup.pdf)
