@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
-
+// more details and instructions:https://github.com/Richard17425/PandaWalker
 // Include the AccelStepper Library
 #include <AccelStepper.h>
 SoftwareSerial mySerial(0,1);
@@ -9,16 +9,16 @@ const int dirPinL = 5;
 const int stepPinL = 2;
 const int dirPinR = 6;
 const int stepPinR = 3;
-int speed_straight = 650;
-int speed_straight_L = 1400; //this side(left side now) speed should set higher
-int speed_turn_right_F = 600;
-int speed_turn_right_L = 300;
-int speed_turn_left_F = 1200;
-int speed_turn_left_L = 600;
+int speed_straight = 380;     // this the right side straight speed
+int speed_straight_L = 720; //this side(left side now) speed should set higher
+int speed_turn_right_F = 1100;    
+int speed_turn_right_L = -300;
+int speed_turn_left_F = 700;
+int speed_turn_left_L = -700;
 int acceleration = 100;
 int acceleration_L = 66;
-bool state = 0;
-char STATE = 'N';
+bool state = 0;    // state of speed Accelerate
+char STATE = 'N';  //char get from the Bluetooth
 // Define motor interface type
 #define motorInterfaceType 1
 
@@ -30,8 +30,8 @@ void setup() {
   Serial.begin(9600);
   // set the maximum speed, acceleration factor,
   // initial speed and the target position
-  myStepperL.setMaxSpeed(1500);
-  myStepperR.setMaxSpeed(1500);
+  myStepperL.setMaxSpeed(2300);
+  myStepperR.setMaxSpeed(1200);
   myStepperL.setAcceleration(50);
   myStepperR.setAcceleration(50);
   //myStepper.setSpeed(200);
@@ -64,16 +64,16 @@ void loop() {
     state = 0;
     STATE = ble_val;
   }
-    if(ble_val == 'A'){ // only left side motor
-    Left_only();
+    if(ble_val == 'A'){ // turn around from left side
+    TurnAround_Leftside();
     state = 0;
     STATE = ble_val;
   }
   if(ble_val == 'B'){ // accelerate
     Accelerate();
   }
-  if(ble_val == 'Y'){  // only right side motor
-    Right_only();
+  if(ble_val == 'Y'){  // turn around from right side
+    TurnAround();
     state = 0;
     STATE = ble_val;
   }
@@ -87,8 +87,7 @@ void loop() {
     if(ble_val == 'S'){ //(start) reset speed
     Reset();
   }
-  //myStepperL.setSpeed(200);
-  //myStepperR.setSpeed(200);
+
   myStepperL.runSpeed();
   myStepperR.runSpeed(); //use this function to let the motor run at the constant speed
 }
@@ -98,24 +97,28 @@ void Forward(){
   myStepperR.setSpeed(-speed_straight);
 }
 void Left(){
-  myStepperL.setSpeed(speed_turn_left_L);
-  myStepperR.setSpeed(-speed_turn_right_F);  //200:133
+  myStepperL.setSpeed(700);
+  myStepperR.setSpeed(-700);
 }
 void Right(){
-  myStepperL.setSpeed(speed_turn_left_F);
-  myStepperR.setSpeed(-speed_turn_right_L);
+  myStepperL.setSpeed(1100);
+  myStepperR.setSpeed(-300);
 }
-void Left_only(){
+void Left_only(){        // only for test
   myStepperL.setSpeed(speed_turn_left_F);
   myStepperR.setSpeed(speed_turn_right_F);
 }
-void Right_only(){
+void Right_only(){      // only for test
   myStepperR.setSpeed(-speed_turn_right_F);
   myStepperL.setSpeed(-speed_turn_left_F);
 }
 void TurnAround(){
-  myStepperL.setSpeed(200);
-  myStepperR.setSpeed(-100);
+  myStepperL.setSpeed(720);
+  myStepperR.setSpeed(380);
+}
+void TurnAround_Leftside(){
+  myStepperL.setSpeed(-720);
+  myStepperR.setSpeed(-380);
 }
 void Back(){
   myStepperL.setSpeed(-speed_straight_L);
@@ -150,10 +153,10 @@ void Accelerate(){
     Back();
     break;
   case 'A':
-    Left_only();
+    TurnAround_Leftside();
     break;
   case 'Y':
-    Right_only();
+    TurnAround();
     break;
   default:
   
@@ -200,10 +203,11 @@ void Slowdown(){
 
 void Reset(){
     state=0;
-    speed_straight = 650;
-    speed_turn_right_F = 500;
-    speed_turn_right_L = 333;
-    speed_turn_left_F = 1000;
-    speed_turn_left_L = 650;
+    speed_straight = 380;
+    speed_straight_L = 720;
+    speed_turn_right_F = 1100;    
+    speed_turn_right_L = -300;
+    speed_turn_left_F = 700;
+    speed_turn_left_L = -700;
     STATE = 'N';
 }
